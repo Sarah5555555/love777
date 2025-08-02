@@ -1,31 +1,76 @@
-...
-<script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Gallery 2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/scrollreveal"></script>
+</head>
+<body class="bg-gradient-to-b from-blue-100 to-white text-gray-800 transition-all duration-300">
+
+  <!-- Header -->
+  <header class="bg-blue-700 text-white p-6 shadow-lg flex justify-between items-center">
+    <h1 class="text-2xl font-bold">✡ Ministry & Portfolio</h1>
+    <div>
+      <button onclick="switchLang('zh')" class="px-2 hover:underline">中文</button>
+      <button onclick="switchLang('en')" class="px-2 hover:underline">EN</button>
+      <button onclick="switchLang('he')" class="px-2 hover:underline">עברית</button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="text-center py-12 bg-blue-50 reveal">
+    <h2 id="gallery-title" class="text-3xl font-bold text-blue-700">Photo Gallery 2</h2>
+    <p id="gallery-subtitle" class="text-lg mt-2">Displaying our second collection of ministry photos.</p>
+  </section>
+
+  <!-- Gallery Section -->
+  <section class="bg-white py-16 reveal">
+    <div id="gallery" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-700 text-white py-4 text-center">
+    <p>© 2025 Ministry & Portfolio. All Rights Reserved.</p>
+  </footer>
+
+  <script>
     const translations = {
-      en: { pageTitle: "Photo Gallery 2", pageSubtitle: "Our works inspired by Israel" },
-      zh: { pageTitle: "作品集 2", pageSubtitle: "受以色列啟發的創作" },
-      he: { pageTitle: "גלריית תמונות 2", pageSubtitle: "יצירות בהשראת ישראל" }
+      en: { galleryTitle: "Photo Gallery 2", gallerySubtitle: "Displaying our second collection of ministry photos." },
+      zh: { galleryTitle: "圖片集 2", gallerySubtitle: "顯示我們的第二組事工圖片。" },
+      he: { galleryTitle: "גלריית תמונות 2", gallerySubtitle: "תצוגת אוסף התמונות השני של השירות שלנו." }
     };
 
-    function switchLang(lang) {
-      document.getElementById('page-title').innerText = translations[lang].pageTitle;
-      document.getElementById('page-subtitle').innerText = translations[lang].pageSubtitle;
+    function switchLang(lang){
+      document.getElementById('gallery-title').innerText = translations[lang].galleryTitle;
+      document.getElementById('gallery-subtitle').innerText = translations[lang].gallerySubtitle;
       document.body.dir = (lang === 'he') ? 'rtl' : 'ltr';
+      localStorage.setItem('lang', lang);
     }
 
+    const savedLang = localStorage.getItem('lang') || 'en';
+    switchLang(savedLang);
+
     async function loadGallery() {
-      const res = await fetch('data/photos2.json'); // 改成讀取第二組圖片
+      const res = await fetch('data/photos2.json');
       const items = await res.json();
       const gallery = document.getElementById('gallery');
 
       items.forEach(item => {
-        const div = document.createElement('div');
-        div.className = "bg-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition transform";
-        div.innerHTML = `<img src="${item.src}" class="w-full h-48 object-cover">`;
-        gallery.appendChild(div);
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition transform text-center";
+        card.innerHTML = `
+          <div class="bg-white flex justify-center items-center h-48">
+            <img src="${item.src}" class="max-h-48 max-w-full object-contain">
+          </div>`;
+        gallery.appendChild(card);
       });
     }
 
     loadGallery();
     ScrollReveal().reveal('.reveal', { delay: 200, distance: '40px', origin: 'bottom', duration: 800 });
-</script>
-...
+  </script>
+
+</body>
+</html>
