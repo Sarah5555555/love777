@@ -11,9 +11,7 @@
 
   <!-- Header -->
   <header class="bg-blue-700 text-white p-6 shadow-lg flex justify-between items-center">
-    <h1 class="text-2xl font-bold">
-      <a href="index.html" class="hover:underline">✡ Ministry & Portfolio</a>
-    </h1>
+    <h1 class="text-2xl font-bold">✡ Ministry & Portfolio</h1>
     <div>
       <button onclick="switchLang('zh')" class="px-2 hover:underline">中文</button>
       <button onclick="switchLang('en')" class="px-2 hover:underline">EN</button>
@@ -21,15 +19,15 @@
     </div>
   </header>
 
-  <!-- Page Title -->
-  <section class="text-center py-12 reveal">
-    <h2 id="page-title" class="text-3xl font-bold text-blue-700">Photo Gallery 1</h2>
-    <p id="page-subtitle" class="text-lg text-gray-600 mt-2">Our works inspired by Israel</p>
+  <!-- Hero Section -->
+  <section class="text-center py-12 bg-blue-50 reveal">
+    <h2 id="gallery-title" class="text-3xl font-bold text-blue-700">Photo Gallery 1</h2>
+    <p id="gallery-subtitle" class="text-lg mt-2">Displaying our first collection of ministry photos.</p>
   </section>
 
-  <!-- Image Gallery -->
-  <section class="max-w-5xl mx-auto py-10 px-4">
-    <div id="gallery" class="grid grid-cols-2 md:grid-cols-3 gap-6"></div>
+  <!-- Gallery Section -->
+  <section class="bg-white py-16 reveal">
+    <div id="gallery" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4"></div>
   </section>
 
   <!-- Footer -->
@@ -39,16 +37,20 @@
 
   <script>
     const translations = {
-      en: { pageTitle: "Photo Gallery 1", pageSubtitle: "Our works inspired by Israel" },
-      zh: { pageTitle: "作品集 1", pageSubtitle: "受以色列啟發的創作" },
-      he: { pageTitle: "גלריית תמונות 1", pageSubtitle: "יצירות בהשראת ישראל" }
+      en: { galleryTitle: "Photo Gallery 1", gallerySubtitle: "Displaying our first collection of ministry photos." },
+      zh: { galleryTitle: "圖片集 1", gallerySubtitle: "顯示我們的第一組事工圖片。" },
+      he: { galleryTitle: "גלריית תמונות 1", gallerySubtitle: "תצוגת אוסף התמונות הראשון של השירות שלנו." }
     };
 
-    function switchLang(lang) {
-      document.getElementById('page-title').innerText = translations[lang].pageTitle;
-      document.getElementById('page-subtitle').innerText = translations[lang].pageSubtitle;
+    function switchLang(lang){
+      document.getElementById('gallery-title').innerText = translations[lang].galleryTitle;
+      document.getElementById('gallery-subtitle').innerText = translations[lang].gallerySubtitle;
       document.body.dir = (lang === 'he') ? 'rtl' : 'ltr';
+      localStorage.setItem('lang', lang);
     }
+
+    const savedLang = localStorage.getItem('lang') || 'en';
+    switchLang(savedLang);
 
     async function loadGallery() {
       const res = await fetch('data/photos1.json');
@@ -56,15 +58,19 @@
       const gallery = document.getElementById('gallery');
 
       items.forEach(item => {
-        const div = document.createElement('div');
-        div.className = "bg-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition transform";
-        div.innerHTML = `<img src="${item.src}" class="w-full h-48 object-cover">`;
-        gallery.appendChild(div);
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition transform text-center";
+        card.innerHTML = `
+          <div class="bg-white flex justify-center items-center h-48">
+            <img src="${item.src}" class="max-h-48 max-w-full object-contain">
+          </div>`;
+        gallery.appendChild(card);
       });
     }
 
     loadGallery();
     ScrollReveal().reveal('.reveal', { delay: 200, distance: '40px', origin: 'bottom', duration: 800 });
   </script>
+
 </body>
 </html>
