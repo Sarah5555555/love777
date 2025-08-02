@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ministry Videos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/scrollreveal"></script>
+</head>
+<body class="bg-gradient-to-b from-blue-100 to-white text-gray-800 transition-all duration-300">
+
+  <!-- Header -->
+  <header class="bg-blue-700 text-white p-6 shadow-lg flex justify-between items-center">
+    <h1 class="text-2xl font-bold">
+      <a href="index.html" class="hover:underline">✡ Ministry & Portfolio</a>
+    </h1>
+    <div>
+      <button onclick="switchLang('zh')" class="px-2 hover:underline">中文</button>
+      <button onclick="switchLang('en')" class="px-2 hover:underline">EN</button>
+      <button onclick="switchLang('he')" class="px-2 hover:underline">עברית</button>
+    </div>
+  </header>
+
+  <!-- Page Title -->
+  <section class="text-center py-12 reveal">
+    <h2 id="page-title" class="text-3xl font-bold text-blue-700">Ministry Videos</h2>
+    <p id="page-subtitle" class="text-lg text-gray-600 mt-2">Watch our works for the Kingdom of God</p>
+  </section>
+
+  <!-- Video Gallery -->
+  <section class="max-w-5xl mx-auto py-10 px-4">
+    <div id="gallery" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-700 text-white py-4 text-center">
+    <p>© 2025 Ministry & Portfolio. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    const translations = {
+      en: { pageTitle: "Ministry Videos", pageSubtitle: "Watch our works for the Kingdom of God" },
+      zh: { pageTitle: "事工影片", pageSubtitle: "觀看我們榮耀神的作品" },
+      he: { pageTitle: "סרטוני השירות", pageSubtitle: "צפו בעבודות שלנו למען מלכות אלוהים" }
+    };
+
+    function switchLang(lang) {
+      document.getElementById('page-title').innerText = translations[lang].pageTitle;
+      document.getElementById('page-subtitle').innerText = translations[lang].pageSubtitle;
+      document.body.dir = (lang === 'he') ? 'rtl' : 'ltr';
+    }
+
+    async function loadGallery() {
+      const res = await fetch('data/videos.json');
+      const items = await res.json();
+      const gallery = document.getElementById('gallery');
+
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = "bg-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition transform";
+
+        if(item.src.includes('youtube.com')) {
+          div.innerHTML = `<iframe class="w-full h-64" src="${item.src}" frameborder="0" allowfullscreen></iframe>`;
+        } else {
+          div.innerHTML = `<video class="w-full h-64" controls><source src="${item.src}" type="video/mp4"></video>`;
+        }
+
+        gallery.appendChild(div);
+      });
+    }
+
+    loadGallery();
+    ScrollReveal().reveal('.reveal', { delay: 200, distance: '40px', origin: 'bottom', duration: 800 });
+  </script>
+</body>
+</html>
